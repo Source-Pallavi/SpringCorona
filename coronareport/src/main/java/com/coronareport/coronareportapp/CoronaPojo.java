@@ -19,8 +19,12 @@ public class CoronaPojo {
     Long id;
 
     String combinedKey;
-    String active;
-    String recovered;
-    String confirmed;
+    String combinedChanges;
+    Double active;
+    Double activeChanges;
+    Double recovered;
+    Double recoveredChanges;
+    Double confirmed;
+    Double  confirmedChanges;
     LocalDateTime lastUpdate;
 }

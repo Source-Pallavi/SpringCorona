@@ -33,6 +33,7 @@ public class MainController {
     public String root(Model model) throws CsvValidationException, IOException {
         model.addAttribute("test1","Hey let's begin");
         service.populateDB();
+        service.populateDB1();
         return "mainTemplate";
     }
     @GetMapping("/2")

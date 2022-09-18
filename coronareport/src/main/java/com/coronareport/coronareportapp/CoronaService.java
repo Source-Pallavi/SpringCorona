@@ -45,22 +45,34 @@ public class CoronaService {
             String[] csvLine;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             int i = 0;
-            while ((csvLine = reader.readNext()) !=null&&i<10) {
+            while ((csvLine = reader.readNext()) !=null) {
                 if (i == 0) {
                     i++;
                     continue;
                 }
                 CoronaPojo corona = new CoronaPojo();
                 corona.setLastUpdate(LocalDateTime.parse(csvLine[4], formatter));
-                corona.setConfirmed((csvLine[7]));
-                corona.setRecovered((csvLine[9]));
-                corona.setActive((csvLine[10]));
-                corona.setCombinedKey(csvLine[11]);
-                log.info(corona.toString());
+                corona.setConfirmed(Double.valueOf(csvLine[7]));
+                corona.setRecovered(Double.valueOf(csvLine[9]));
+                corona.setActive(Double.valueOf(csvLine[10]));
+                corona.setCombinedKey((csvLine[11]));
+                List<CoronaPojo> list= findByCombinedKey(corona.getCombinedKey());
+               if(!list.isEmpty())
+               {
+                   corona.setConfirmedChanges(corona.getConfirmed()-list.get(list.size()-1).getConfirmed());
+                   corona.setRecoveredChanges(corona.getRecovered()-list.get(list.size()-1).getRecovered());
+                   corona.setActiveChanges(corona.getActive()-list.get(list.size()-1).getActive());
+               }
                 coronaRepository.save(corona);
+                log.info(corona.toString());
+                if(i==10) break;
             }
             reader.close();
         }
+    }
+
+    private List<CoronaPojo> findByCombinedKey(String combinedKey) {
+        return coronaRepository.findByCombinedKey(combinedKey);
     }
 
     public List<CoronaPojo> findbyLastUpdate(LocalDate localDate) {
@@ -70,5 +82,45 @@ public class CoronaService {
     public List<CoronaPojo> findAllData() {
         return coronaRepository.findAll();
     }
+    public void populateDB1() throws CsvValidationException, IOException {
+        String csvFilePath="C:\\Projects\\SpringProject\\SpringCorona\\coronareport\\csvFiles\\conora02.csv";
+        URL url= new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/82f805052bc7420ad3368db17fcfd09eac826c97/csse_covid_19_data/csse_covid_19_daily_reports/06-06-2020.csv");
+        HttpURLConnection huc= (HttpURLConnection) url.openConnection();
+        int responseCode= huc.getResponseCode();
+        log.info(String.valueOf(responseCode));
+        if(responseCode==200) {
+            log.info("--Successfully Connected to github--");
+            BufferedReader br = new BufferedReader(new InputStreamReader(huc.getInputStream()), 8192);
+            CSVReader reader = new CSVReader(br);
+            //reader.getRecordsRead();
+            String[] csvLine;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            int i = 0;
+            while ((csvLine = reader.readNext()) !=null&&i<10) {
+                if (i == 0) {
+                    i++;
+                    continue;
+                }
+                CoronaPojo corona = new CoronaPojo();
+                corona.setLastUpdate(LocalDateTime.parse(csvLine[4], formatter));
+                corona.setConfirmed(Double.valueOf(csvLine[7]));
+                corona.setRecovered(Double.valueOf(csvLine[9]));
+                corona.setActive(Double.valueOf(csvLine[10]));
+                corona.setCombinedKey((csvLine[11]));
+                List<CoronaPojo> list= findByCombinedKey(corona.getCombinedKey());
+                if(!list.isEmpty())
+                {
+                    corona.setConfirmedChanges(corona.getConfirmed()-list.get(list.size()-1).getConfirmed());
+                    corona.setRecoveredChanges(corona.getRecovered()-list.get(list.size()-1).getRecovered());
+                    corona.setActiveChanges(corona.getActive()-list.get(list.size()-1).getActive());
+                }
+                coronaRepository.save(corona);
+                log.info(corona.toString());
+if(i==10) break;
+            }
+            reader.close();
+        }
+    }
+
 }
 

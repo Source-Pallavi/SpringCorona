@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface CoronaRepository extends JpaRepository<CoronaPojo,Long> {
     List<CoronaPojo> findByLastUpdateBetween(LocalDateTime from,LocalDateTime to);
+
+    List<CoronaPojo> findByCombinedKey(String combinedKey);
 }
