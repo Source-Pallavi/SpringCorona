@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    password: 12Ramji34
+    url: jdbc:mysql://127.0.0.1:8080/coronareport?allowPublicKeyRetrieval=true&useSSl=false
+    username: root
+    jpa:
+      hibernate:
+        ddl-auto: update
+      # database:mysql
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQLDialect

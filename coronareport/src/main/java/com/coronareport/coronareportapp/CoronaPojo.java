@@ -2,6 +2,7 @@ package com.coronareport.coronareportapp;
 
 import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -10,10 +11,16 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class CoronaPojo {
+    @Id
+    @Column(name="id",updatable = false,unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     String combinedKey;
-    Long active;
-    Long recovered;
-    Long confirmed;
-    String lastUpdate;
+    String active;
+    String recovered;
+    String confirmed;
+    LocalDateTime lastUpdate;
 }
