@@ -14,22 +14,60 @@
     </div>
 </nav>
 <div class="container">
-    <table><tr><th>Place</th>
+    <table id="corona-table"><thead><tr><th>Place</th>
         <th>Confirmed</th>
+        <th>ConfirmedChanges</th>
         <th>Active</th>
+        <th>ActiveChanges</th>
         <th>Recovered</th>
-      <tr
-    th:each = "corona : ${coronaData}">
-        <td th:text=" ${corona.combinedKey}"></td>
-        <td th:text=" ${corona.confirmed}"></td>
-        <td th:text=" ${corona.active}"></td>
-        <td th:text=" ${corona.recovered}"></td>
-
-    </tr></table>
+        <th>RecoveredChanges</th>
+    </tr>>
+    </thead>
+        <tbody>
+        <tr th:each = "corona : ${coronaData}">
+            <td th:text=" ${corona.combinedKey}"></td>
+            <td th:text=" ${corona.confirmed}"></td>
+            <td>
+                <span th:if = "${corona.confirmedChanges>0}" th: text="$ {'+' + corona.confirmedChanges}" class ="badge red white-text"></span>
+                <span th:if = "${corona.confirmedChanges==0}" th: text="$ {'+' + corona.confirmedChanges}" class ="badge grey black-text"></span>
+                <span th:if = "${corona.confirmedChanges<0}" th: text="$ {'+' + corona.confirmedChanges}" class ="badge white-text"></span>
+            </td>
+            <td th:text=" ${corona.confirmedChanges}"></td>
+            <td th:text=" ${corona.active}"></td>
+            <td>
+                <span th:if = "${corona.activeChanges >0}"th: text="$ {'+' + corona.confirmedChanges}" class ="badge red white-text" ></span>
+                <span th:if = "${corona.activeChanges==0}" th: text="$ {'+' + corona.activeChanges}" class ="badge grey black-text"></span>
+                <span th:if = "${corona.activeChanges<0}" th: text="$ {'+' + corona.recoveredChanges}" class ="badge white-text"></span>
+            </td>
+            <td th:text=" ${corona.activeChanges}"></td>
+            <td th:text=" ${corona.recovered}"></td>
+            <td>
+                <span th:if = "${corona.recoveredChanges>0}" th: text="$ {'+' + corona.confirmedChanges}" class ="badge red white-text" ></span>
+                <span th:if = "${corona.recoveredChanges==0}" th: text="$ {'+' + corona.activeChanges}" class ="badge grey black-text"></span>
+                <span th:if = "${corona.recoveredChanges<0}" th: text="$ {'+' + corona.recoveredChanges}" class ="badge white-text"></span>
+            </td>
+            <td th:text=" ${corona.recoveredChanges}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <!--<h1>Hey this is Pallavi</h1>
 <h2>[[${test1}]]</h2>
 <h3 th:text ="${test1}"></h3>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function (){
+        $('#corona-table').DataTable({
+            autoWidth: false,
+            columnDefs:[{
+                targets:['_all'],
+                className:'mdc-data-table__cell',
+            }
+            ]
+        });
+    });
+</script>
 </body>
 </html>
